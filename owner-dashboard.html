@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Vehicle Owner Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .fine-card,
+        .history-card,
+        .notification-card {
+            padding: 18px;
+            margin-bottom: 14px;
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+
+        .notification-card {
+            border-left: 5px solid #2563eb;
+        }
+
+        .notification-success {
+            border-left-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .notification-danger {
+            border-left-color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .notification-time {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .reminder {
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+        }
+
+        .reminder-normal,
+        .reminder-paid {
+            color: #166534;
+            border: 1px solid #86efac;
+            background: #f0fdf4;
+        }
+
+        .reminder-warning {
+            color: #854d0e;
+            border: 1px solid #fde047;
+            background: #fefce8;
+        }
+
+        .reminder-danger {
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            background: #fef2f2;
+        }
+
+        .pending {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .paid {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .receipt-button {
+            margin-left: 8px;
+            background: #2563eb;
+        }
+
+        .receipt-box {
+            width: min(700px, 92%);
+            margin: 30px auto;
+            padding: 30px;
+            border: 2px solid #1d4ed8;
+            border-radius: 14px;
+            background: white;
+        }
+
+        .receipt-header {
+            padding-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px dashed #94a3b8;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 11px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #receiptModal,
+            #receiptModal * {
+                visibility: visible;
+            }
+
+            #receiptModal {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🚗 Vehicle Owner Dashboard</h1>
+        <p>TN Vehicle SecurePay</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>🔍 Vehicle Search</h2>
+
+            <input
+                id="vehicleNumber"
+                type="text"
+                placeholder="TN 01 AB 1234"
+            >
+
+            <button onclick="loadDashboard()">
+                View Dashboard
+            </button>
+
+            <div id="message"></div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+
+            <div class="card">
+                <h2>🚗 Vehicle Information</h2>
+
+                <div class="grid">
+                    <div class="info">
+                        Vehicle Number
+                        <strong id="vehicle">-</strong>
+                    </div>
+
+                    <div class="info">
+                        Owner Name
+                        <strong id="owner">-</strong>
+                    </div>
+
+                    <div class="info">
+                        Licence
+                        <strong id="licence">-</strong>
+                    </div>
+
+                    <div class="info">
+                        Identity
+                        <strong id="identity">-</strong>
+                    </div>
+
+                    <div class="info">
+                        Vehicle Status
+                        <strong id="vehicleStatus">-</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="stolenAlert" class="hidden">
+                <div class="reminder reminder-danger">
+                    🚨 <strong>VEHICLE ALERT</strong>
+                    <br><br>
+                    This vehicle has been flagged as <strong>STOLEN</strong>.
+                    <br>
+                    Please contact Transport Authority or Police Department.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔔 Notifications</h2>
+                <div id="notificationArea">Loading notifications...</div>
+            </div>
+
+            <div class="card">
+                <h2>💰 Fine Summary</h2>
+
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h4>Total Fine</h4>
+                        <p id="totalFine">₹0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h4>Pending Amount</h4>
+                        <p id="pendingAmount">₹0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h4>Paid Amount</h4>
+                        <p id="paidAmount">₹0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h4>Pending Fines</h4>
+                        <p id="pendingFines">0</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <h4>Paid Fines</h4>
+                        <p id="paidFines">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔔 Payment Reminder</h2>
+                <div id="reminderArea">Checking due dates...</div>
+            </div>
+
+            <div class="card">
+                <h2>💳 Auto-Pay</h2>
+                <div id="autoPayBox">Loading...</div>
+            </div>
+
+            <div class="card">
+                <h2>💰 Fine Records</h2>
+                <div id="fineRecords">Loading...</div>
+            </div>
+
+            <div class="card">
+                <h2>📜 Payment History</h2>
+                <div id="paymentHistory">Loading...</div>
+            </div>
+
+            <button onclick="goHome()">🏠 Back to Home</button>
+        </div>
+    </div>
+
+    <div id="receiptModal" class="hidden">
+        <div class="receipt-box">
+            <div class="receipt-header">
+                <h1>🧾 TN Vehicle SecurePay</h1>
+                <p>Digital Fine Payment Receipt</p>
+            </div>
+
+            <div id="receiptContent"></div>
+
+            <br>
+
+            <div
+                class="no-print"
+                style="text-align:center;"
+            >
+                <button onclick="window.print()">🖨️ Print Receipt</button>
+                <button onclick="closeReceipt()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+        let currentVehicleNumber = "";
+
+        function formatDate(value) {
+            if (!value) return "-";
+
+            return new Date(value).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        function formatDateTime(value) {
+            if (!value) return "-";
+
+            return new Date(value).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short"
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value || "-")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        async function loadDashboard() {
+            const vehicleNumber = document
+                .getElementById("vehicleNumber")
+                .value
+                .trim()
+                .toUpperCase();
+
+            const message = document.getElementById("message");
+
+            if (!vehicleNumber) {
+                message.innerHTML = `
+                    <div class="error">
+                        ❌ Enter vehicle number.
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(vehicleNumber)}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    message.innerHTML = `
+                        <div class="error">
+                            ❌ ${data.message}
+                        </div>
+                    `;
+                    return;
+                }
+
+                currentVehicleNumber = vehicleNumber;
+
+                document
+                    .getElementById("dashboard")
+                    .classList
+                    .remove("hidden");
+
+                showVehicle(data.vehicle);
+                showFines(data.fines);
+
+                await loadNotifications(vehicleNumber);
+                await loadPaymentHistory(vehicleNumber);
+
+                message.innerHTML = `
+                    <div class="success">
+                        ✅ Dashboard loaded successfully.
+                    </div>
+                `;
+            } catch (error) {
+                message.innerHTML = `
+                    <div class="error">
+                        ❌ Backend connection failed.
+                        <br><br>
+                        Run: <strong>node server.js</strong>
+                    </div>
+                `;
+            }
+        }
+
+        function showVehicle(vehicle) {
+            document.getElementById("vehicle").textContent =
+                vehicle.vehicleNumber;
+
+            document.getElementById("owner").textContent =
+                vehicle.ownerName;
+
+            document.getElementById("licence").textContent =
+                "✅ " + vehicle.licenceStatus;
+
+            document.getElementById("identity").textContent =
+                "✅ " + vehicle.aadhaarStatus;
+
+            document.getElementById("vehicleStatus").textContent =
+                vehicle.vehicleStatus;
+
+            const stolenAlert =
+                document.getElementById("stolenAlert");
+
+            if (vehicle.stolen === true) {
+                stolenAlert.classList.remove("hidden");
+            } else {
+                stolenAlert.classList.add("hidden");
+            }
+
+            document.getElementById("autoPayBox").innerHTML = `
+                <p><strong>Status:</strong> ${escapeHtml(vehicle.autoDebitStatus)}</p>
+                <p><strong>Bank:</strong> ${escapeHtml(vehicle.bankName)}</p>
+                <p><strong>Account:</strong> ${escapeHtml(vehicle.bankAccountMasked)}</p>
+                <p><strong>Authorization:</strong> ${vehicle.authorizationMonths} Months</p>
+
+                <div class="reminder reminder-warning">
+                    ℹ️ This is a demo Auto-Pay feature. No real bank transaction occurs.
+                </div>
+            `;
+        }
+
+        async function loadNotifications(vehicleNumber) {
+            const notificationArea =
+                document.getElementById("notificationArea");
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/notifications/${encodeURIComponent(vehicleNumber)}`
+                );
+
+                const data = await response.json();
+
+                if (!data.notifications.length) {
+                    notificationArea.innerHTML = `
+                        <div class="reminder reminder-normal">
+                            ✅ No new notifications.
+                        </div>
+                    `;
+                    return;
+                }
+
+                notificationArea.innerHTML =
+                    data.notifications.map(function (notification) {
+                        const typeClass =
+                            notification.type === "danger"
+                                ? "notification-danger"
+                                : "notification-success";
+
+                        const icon =
+                            notification.type === "danger"
+                                ? "🚨"
+                                : "✅";
+
+                        return `
+                            <div class="notification-card ${typeClass}">
+                                <strong>${icon} ${escapeHtml(notification.title)}</strong>
+                                <p>${escapeHtml(notification.message)}</p>
+                                <span class="notification-time">
+                                    ${formatDateTime(notification.dateTime)}
+                                </span>
+                            </div>
+                        `;
+                    }).join("");
+            } catch (error) {
+                notificationArea.innerHTML = `
+                    <div class="error">
+                        ❌ Notifications loading failed.
+                    </div>
+                `;
+            }
+        }
+
+        function showFines(fines) {
+            let totalFine = 0;
+            let pendingAmount = 0;
+            let paidAmount = 0;
+            let pendingCount = 0;
+            let paidCount = 0;
+
+            fines.forEach(function (fine) {
+                const amount = Number(fine.fineAmount || 0);
+
+                totalFine += amount;
+
+                if (String(fine.status).toLowerCase() === "paid") {
+                    paidAmount += amount;
+                    paidCount++;
+                } else {
+                    pendingAmount += amount;
+                    pendingCount++;
+                }
+            });
+
+            document.getElementById("totalFine").textContent =
+                "₹" + totalFine;
+
+            document.getElementById("pendingAmount").textContent =
+                "₹" + pendingAmount;
+
+            document.getElementById("paidAmount").textContent =
+                "₹" + paidAmount;
+
+            document.getElementById("pendingFines").textContent =
+                pendingCount;
+
+            document.getElementById("paidFines").textContent =
+                paidCount;
+
+            showReminder(fines);
+
+            const fineRecords =
+                document.getElementById("fineRecords");
+
+            fineRecords.innerHTML = fines.map(function (fine) {
+                const isPaid =
+                    String(fine.status).toLowerCase() === "paid";
+
+                return `
+                    <div class="fine-card">
+                        <p><strong>Fine ID:</strong> ${fine.id}</p>
+                        <p><strong>Violation:</strong> ${escapeHtml(fine.violation)}</p>
+                        <p><strong>Amount:</strong> ₹${fine.fineAmount}</p>
+                        <p><strong>Due Date:</strong> ${formatDate(fine.dueDate)}</p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            <span class="${isPaid ? "paid" : "pending"}">
+                                ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
+                            </span>
+                        </p>
+
+                        ${
+                            isPaid
+                                ? `
+                                    <button
+                                        class="receipt-button"
+                                        onclick="viewReceipt(${fine.id})"
+                                    >
+                                        🧾 View Receipt
+                                    </button>
+                                `
+                                : `
+                                    <button onclick="payFine(${fine.id})">
+                                        💳 Pay Now by Demo Auto-Pay
+                                    </button>
+                                `
+                        }
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function showReminder(fines) {
+            const pendingFines = fines.filter(function (fine) {
+                return String(fine.status).toLowerCase() !== "paid";
+            });
+
+            const reminderArea =
+                document.getElementById("reminderArea");
+
+            if (!pendingFines.length) {
+                reminderArea.innerHTML = `
+                    <div class="reminder reminder-paid">
+                        ✅ All fine payments are completed.
+                    </div>
+                `;
+                return;
+            }
+
+            reminderArea.innerHTML = pendingFines.map(function (fine) {
+                return `
+                    <div class="reminder reminder-warning">
+                        ⚠️ Fine #${fine.id}: ₹${fine.fineAmount}
+                        — Due on ${formatDate(fine.dueDate)}
+                    </div>
+                `;
+            }).join("");
+        }
+
+        async function payFine(fineId) {
+            const confirmed = confirm(
+                "Pay this fine using Demo Auto-Pay?"
+            );
+
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/fines/${fineId}/auto-debit`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert("❌ " + data.message);
+                    return;
+                }
+
+                alert("✅ " + data.message);
+
+                await loadDashboard();
+                viewReceipt(fineId);
+            } catch (error) {
+                alert("❌ Payment failed.");
+            }
+        }
+
+        async function loadPaymentHistory(vehicleNumber) {
+            const paymentHistory =
+                document.getElementById("paymentHistory");
+
+            const response = await fetch(
+                `${API_URL}/api/payment-history/${encodeURIComponent(vehicleNumber)}`
+            );
+
+            const history = await response.json();
+
+            if (!history.length) {
+                paymentHistory.innerHTML = `
+                    <div class="reminder reminder-normal">
+                        ℹ️ No completed payments yet.
+                    </div>
+                `;
+                return;
+            }
+
+            paymentHistory.innerHTML = history.map(function (fine) {
+                return `
+                    <div class="history-card">
+                        <p><strong>Fine ID:</strong> ${fine.id}</p>
+                        <p><strong>Amount Paid:</strong> ₹${fine.fineAmount}</p>
+                        <p><strong>Method:</strong> ${escapeHtml(fine.paymentMethod)}</p>
+                        <p><strong>Paid Date:</strong> ${formatDate(fine.paidDate)}</p>
+
+                        <button
+                            class="receipt-button"
+                            onclick="viewReceipt(${fine.id})"
+                        >
+                            🧾 View Receipt
+                        </button>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        async function viewReceipt(fineId) {
+            const response = await fetch(
+                `${API_URL}/api/receipt/${fineId}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert("❌ " + data.message);
+                return;
+            }
+
+            const fine = data.fine;
+            const vehicle = data.vehicle;
+
+            document.getElementById("receiptContent").innerHTML = `
+                <div class="receipt-row">
+                    <strong>Receipt Number</strong>
+                    <span>${escapeHtml(fine.receiptNumber)}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Vehicle Number</strong>
+                    <span>${escapeHtml(fine.vehicleNumber)}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Owner Name</strong>
+                    <span>${escapeHtml(vehicle.ownerName)}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Fine ID</strong>
+                    <span>${fine.id}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Amount Paid</strong>
+                    <span>₹${fine.fineAmount}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Payment Method</strong>
+                    <span>${escapeHtml(fine.paymentMethod)}</span>
+                </div>
+
+                <div class="receipt-row">
+                    <strong>Paid Date</strong>
+                    <span>${formatDate(fine.paidDate)}</span>
+                </div>
+            `;
+
+            document
+                .getElementById("receiptModal")
+                .classList
+                .remove("hidden");
+        }
+
+        function closeReceipt() {
+            document
+                .getElementById("receiptModal")
+                .classList
+                .add("hidden");
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        const demoVehicle = new URLSearchParams(
+            window.location.search
+        ).get("vehicle");
+
+        if (demoVehicle) {
+            document.getElementById("vehicleNumber").value =
+                demoVehicle;
+
+            loadDashboard();
+        }
+    </script>
+
+</body>
+</html>

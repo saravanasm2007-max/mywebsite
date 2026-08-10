@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Owner Registration</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        🚗 Vehicle Owner Registration
+    </h1>
+
+    <p>
+        Vehicle • Licence • Identity • Bank Authorization
+    </p>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- =========================================
+         STEP 1
+    ========================================== -->
+
+    <div class="card">
+
+        <h2>
+            Step 1 — Vehicle Details
+        </h2>
+
+
+        <label>
+            Vehicle Number
+        </label>
+
+        <input
+            id="vehicleNumber"
+            type="text"
+            placeholder="TN 01 AB 1234"
+        >
+
+
+        <label>
+            Driving Licence Number
+        </label>
+
+        <input
+            id="licenceNumber"
+            type="text"
+            placeholder="DL-DEMO-12345"
+        >
+
+
+        <button onclick="verifyVehicle()">
+
+            🔍 Verify Vehicle & Licence
+
+        </button>
+
+
+        <div id="vehicleMessage"></div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         STEP 2
+    ========================================== -->
+
+    <div
+        class="card hidden"
+        id="identitySection"
+    >
+
+        <h2>
+            Step 2 — Identity Verification
+        </h2>
+
+
+        <p>
+            Demo identity verification only.
+        </p>
+
+
+        <label>
+            Demo Identity ID
+        </label>
+
+        <input
+            id="identityId"
+            type="text"
+            placeholder="DEMO-ID-1234"
+        >
+
+
+        <button onclick="verifyIdentity()">
+
+            🆔 Verify Identity
+
+        </button>
+
+
+        <div id="identityMessage"></div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         STEP 3
+    ========================================== -->
+
+    <div
+        class="card hidden"
+        id="bankSection"
+    >
+
+        <h2>
+            Step 3 — Bank Authorization
+        </h2>
+
+
+        <p>
+            Demo bank authorization for the project.
+        </p>
+
+
+        <label>
+            Bank Name
+        </label>
+
+        <input
+            id="bankName"
+            type="text"
+            placeholder="Demo Bank"
+        >
+
+
+        <label>
+            Demo Account Number
+        </label>
+
+        <input
+            id="accountNumber"
+            type="text"
+            placeholder="1234567890"
+        >
+
+
+        <button onclick="activateAutoPay()">
+
+            🏦 Activate 3-Month Auto-Pay
+
+        </button>
+
+
+        <div id="bankMessage"></div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         FINAL STATUS
+    ========================================== -->
+
+    <div
+        class="card hidden"
+        id="finalSection"
+    >
+
+        <h2>
+            🎉 Registration Completed
+        </h2>
+
+
+        <div class="success">
+
+            <h3>
+                Vehicle Successfully Registered
+            </h3>
+
+
+            <p>
+                🚗 Vehicle:
+                <strong id="finalVehicle"></strong>
+            </p>
+
+
+            <p>
+                🪪 Licence:
+                <span class="verified">
+                    ✅ Verified
+                </span>
+            </p>
+
+
+            <p>
+                🆔 Identity:
+                <span class="verified">
+                    ✅ Verified
+                </span>
+            </p>
+
+
+            <p>
+                🏦 Bank:
+                <strong id="finalBank"></strong>
+            </p>
+
+
+            <p>
+                💳 Auto-Pay:
+                <span class="verified">
+                    🟢 ACTIVE
+                </span>
+            </p>
+
+
+            <p>
+                📅 Authorization:
+                <strong>
+                    3 Months
+                </strong>
+            </p>
+
+
+            <hr>
+
+
+            <p class="demo-warning">
+
+                ⚠️ This is a project demonstration.
+                No real Aadhaar verification or
+                bank transaction is performed.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+const API_URL =
+    "http://localhost:3000";
+
+
+let registeredVehicle = "";
+
+
+
+// =================================================
+// STEP 1 — VEHICLE VERIFICATION
+// =================================================
+
+function verifyVehicle() {
+
+    const vehicle =
+        document
+            .getElementById("vehicleNumber")
+            .value
+            .trim()
+            .toUpperCase();
+
+
+    const licence =
+        document
+            .getElementById("licenceNumber")
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById("vehicleMessage");
+
+
+    if (
+        vehicle === "" ||
+        licence === ""
+    ) {
+
+        message.innerHTML = `
+
+            <div class="error">
+
+                ❌ Please enter vehicle number
+                and licence number.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    registeredVehicle =
+        vehicle;
+
+
+    message.innerHTML = `
+
+        <div class="success">
+
+            <h3>
+                ✅ Vehicle Verified
+            </h3>
+
+            <p>
+                Vehicle:
+                <strong>
+                    ${vehicle}
+                </strong>
+            </p>
+
+            <p>
+                Licence:
+                <span class="verified">
+                    ✅ Verified
+                </span>
+            </p>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("identitySection")
+        .classList
+        .remove("hidden");
+
+}
+
+
+
+// =================================================
+// STEP 2 — IDENTITY VERIFICATION
+// =================================================
+
+function verifyIdentity() {
+
+    const identity =
+        document
+            .getElementById("identityId")
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById("identityMessage");
+
+
+    if (identity === "") {
+
+        message.innerHTML = `
+
+            <div class="error">
+
+                ❌ Enter demo identity ID.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    message.innerHTML = `
+
+        <div class="success">
+
+            <h3>
+                🆔 Identity Verified
+            </h3>
+
+            <p>
+                Status:
+                <span class="verified">
+                    ✅ VERIFIED
+                </span>
+            </p>
+
+            <p>
+                Identity information is masked
+                for privacy.
+            </p>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("bankSection")
+        .classList
+        .remove("hidden");
+
+}
+
+
+
+// =================================================
+// STEP 3 — AUTO PAY
+// =================================================
+
+async function activateAutoPay() {
+
+    const bankName =
+        document
+            .getElementById("bankName")
+            .value
+            .trim();
+
+
+    const accountNumber =
+        document
+            .getElementById("accountNumber")
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById("bankMessage");
+
+
+    if (
+        bankName === "" ||
+        accountNumber === ""
+    ) {
+
+        message.innerHTML = `
+
+            <div class="error">
+
+                ❌ Please enter demo bank
+                details.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    if (registeredVehicle === "") {
+
+        message.innerHTML = `
+
+            <div class="error">
+
+                ❌ Vehicle verification
+                is required first.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/bank-link`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            vehicleNumber:
+                                registeredVehicle,
+
+                            bankName:
+                                bankName,
+
+                            accountNumber:
+                                accountNumber
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            message.innerHTML = `
+
+                <div class="error">
+
+                    ❌
+                    ${data.message}
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        message.innerHTML = `
+
+            <div class="success">
+
+                <h3>
+                    🟢 Auto-Pay Activated
+                </h3>
+
+                <p>
+                    Authorization:
+                    <strong>
+                        3 Months
+                    </strong>
+                </p>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById("finalVehicle")
+            .textContent =
+                registeredVehicle;
+
+
+        document
+            .getElementById("finalBank")
+            .textContent =
+                data.bankName;
+
+
+        document
+            .getElementById("finalSection")
+            .classList
+            .remove("hidden");
+
+
+        document
+            .getElementById("finalSection")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        message.innerHTML = `
+
+            <div class="error">
+
+                ❌ Backend connection failed.
+
+                <br><br>
+
+                Make sure the server is running.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>

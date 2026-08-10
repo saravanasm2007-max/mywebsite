@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Officer Portal</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin: 18px 0;
+        }
+
+        .stat-box {
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #dbe4ee;
+            background: #f8fafc;
+        }
+
+        .stat-box h4 {
+            margin: 0;
+            color: #475569;
+        }
+
+        .stat-box p {
+            margin: 10px 0 0;
+            color: #123c69;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .chart-box {
+            padding: 20px;
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+
+        .chart-box h3 {
+            margin-top: 0;
+            color: #123c69;
+        }
+
+        .chart-row {
+            margin: 18px 0;
+        }
+
+        .chart-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        .chart-track {
+            overflow: hidden;
+            height: 22px;
+            border-radius: 20px;
+            background: #e2e8f0;
+        }
+
+        .chart-fill {
+            height: 100%;
+            min-width: 3%;
+            border-radius: 20px;
+        }
+
+        .paid-fill {
+            background: #16a34a;
+        }
+
+        .pending-fill {
+            background: #dc2626;
+        }
+
+        .fine-card,
+        .audit-card {
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid #dbe4ee;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .audit-card {
+            border-left: 5px solid #7c3aed;
+        }
+
+        .stolen-card {
+            padding: 17px;
+            margin: 15px 0;
+            border-radius: 10px;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            background: #fef2f2;
+        }
+
+        .normal-card {
+            padding: 17px;
+            margin: 15px 0;
+            border-radius: 10px;
+            color: #166534;
+            border: 1px solid #86efac;
+            background: #f0fdf4;
+        }
+
+        .danger-button {
+            background: #dc2626;
+        }
+
+        .normal-button {
+            background: #15803d;
+        }
+
+        .logout {
+            background: #475569;
+        }
+
+        .paid {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .report-table {
+            width: 100%;
+            margin-top: 16px;
+            border-collapse: collapse;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dbe4ee;
+        }
+
+        .report-table th {
+            color: white;
+            background: #123c69;
+        }
+
+        @media (max-width: 850px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .report-table {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🚔 TN Transport Officer Portal</h1>
+        <p>Vehicle Verification, Reports & Audit Log</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card" id="loginSection">
+            <h2>👮 Officer Login</h2>
+
+            <label>Officer ID</label>
+
+            <input
+                id="officerId"
+                type="text"
+                placeholder="TN-OFFICER-001"
+            >
+
+            <label>Password</label>
+
+            <input
+                id="officerPassword"
+                type="password"
+                placeholder="123456"
+            >
+
+            <button onclick="login()">Login</button>
+
+            <div id="loginMessage"></div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+
+            <div class="card">
+                <h2>📊 Officer Statistics</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h4>Total Vehicles</h4>
+                        <p id="totalVehicles">0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Total Fines</h4>
+                        <p id="totalFines">0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Pending Fines</h4>
+                        <p id="pendingFines">0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Paid Fines</h4>
+                        <p id="paidFines">0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Pending Amount</h4>
+                        <p id="pendingAmount">₹0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Paid Amount</h4>
+                        <p id="paidAmount">₹0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Stolen Vehicles</h4>
+                        <p id="stolenVehicles">0</p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h4>Auto-Pay Active</h4>
+                        <p id="autoPayVehicles">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📈 Fine Reports & Analytics</h2>
+
+                <div class="report-grid">
+                    <div class="chart-box">
+                        <h3>Fine Status Report</h3>
+
+                        <div class="chart-row">
+                            <div class="chart-label">
+                                <span>✅ Paid Fines</span>
+                                <span id="paidFineCount">0</span>
+                            </div>
+
+                            <div class="chart-track">
+                                <div
+                                    id="paidFineBar"
+                                    class="chart-fill paid-fill"
+                                    style="width: 0%;"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="chart-row">
+                            <div class="chart-label">
+                                <span>⚠️ Pending Fines</span>
+                                <span id="pendingFineCount">0</span>
+                            </div>
+
+                            <div class="chart-track">
+                                <div
+                                    id="pendingFineBar"
+                                    class="chart-fill pending-fill"
+                                    style="width: 0%;"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-box">
+                        <h3>Fine Amount Report</h3>
+
+                        <div class="chart-row">
+                            <div class="chart-label">
+                                <span>✅ Paid Amount</span>
+                                <span id="paidAmountReport">₹0</span>
+                            </div>
+
+                            <div class="chart-track">
+                                <div
+                                    id="paidAmountBar"
+                                    class="chart-fill paid-fill"
+                                    style="width: 0%;"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <div class="chart-row">
+                            <div class="chart-label">
+                                <span>⚠️ Pending Amount</span>
+                                <span id="pendingAmountReport">₹0</span>
+                            </div>
+
+                            <div class="chart-track">
+                                <div
+                                    id="pendingAmountBar"
+                                    class="chart-fill pending-fill"
+                                    style="width: 0%;"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📋 Fine Report Table</h3>
+
+                <div id="reportTableArea">
+                    Loading report...
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔍 Search Vehicle</h2>
+
+                <input
+                    id="searchVehicle"
+                    type="text"
+                    placeholder="TN 01 AB 1234"
+                >
+
+                <button onclick="searchVehicle()">
+                    🔍 Search Vehicle
+                </button>
+
+                <button
+                    class="logout"
+                    onclick="logout()"
+                >
+                    Logout
+                </button>
+
+                <div id="vehicleResult"></div>
+            </div>
+
+            <div class="card">
+                <h2>🔐 Officer Audit Log</h2>
+
+                <p>
+                    Vehicle searches and vehicle-status changes are recorded here.
+                </p>
+
+                <div id="auditLog">
+                    Loading audit records...
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+
+        let loggedInOfficerId = "";
+        let selectedVehicleNumber = "";
+
+        function escapeHtml(value) {
+            return String(value || "-")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function formatDateTime(value) {
+            if (!value) return "-";
+
+            return new Date(value).toLocaleString("en-IN", {
+                dateStyle: "medium",
+                timeStyle: "short"
+            });
+        }
+
+        function login() {
+            const officerId = document
+                .getElementById("officerId")
+                .value
+                .trim();
+
+            const password = document
+                .getElementById("officerPassword")
+                .value
+                .trim();
+
+            const message = document.getElementById("loginMessage");
+
+            if (
+                officerId === "TN-OFFICER-001" &&
+                password === "123456"
+            ) {
+                loggedInOfficerId = officerId;
+
+                document
+                    .getElementById("loginSection")
+                    .classList
+                    .add("hidden");
+
+                document
+                    .getElementById("dashboard")
+                    .classList
+                    .remove("hidden");
+
+                loadStatistics();
+                loadReports();
+                loadAuditLogs();
+
+                message.innerHTML = "";
+            } else {
+                message.innerHTML = `
+                    <div class="error">
+                        ❌ Invalid officer login.
+                        <br><br>
+                        Demo ID: <strong>TN-OFFICER-001</strong>
+                        <br>
+                        Password: <strong>123456</strong>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            loggedInOfficerId = "";
+            selectedVehicleNumber = "";
+
+            document
+                .getElementById("dashboard")
+                .classList
+                .add("hidden");
+
+            document
+                .getElementById("loginSection")
+                .classList
+                .remove("hidden");
+
+            document.getElementById("officerPassword").value = "";
+            document.getElementById("searchVehicle").value = "";
+            document.getElementById("vehicleResult").innerHTML = "";
+            document.getElementById("auditLog").innerHTML = "";
+        }
+
+        async function loadStatistics() {
+            const response = await fetch(
+                `${API_URL}/api/officer/statistics`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) return;
+
+            const stats = data.statistics;
+
+            document.getElementById("totalVehicles").textContent =
+                stats.totalVehicles;
+
+            document.getElementById("totalFines").textContent =
+                stats.totalFines;
+
+            document.getElementById("pendingFines").textContent =
+                stats.pendingFines;
+
+            document.getElementById("paidFines").textContent =
+                stats.paidFines;
+
+            document.getElementById("pendingAmount").textContent =
+                "₹" + stats.pendingAmount;
+
+            document.getElementById("paidAmount").textContent =
+                "₹" + stats.paidAmount;
+
+            document.getElementById("stolenVehicles").textContent =
+                stats.stolenVehicles;
+
+            document.getElementById("autoPayVehicles").textContent =
+                stats.autoPayVehicles;
+        }
+
+        async function loadReports() {
+            const reportTableArea =
+                document.getElementById("reportTableArea");
+
+            try {
+                const response = await fetch(`${API_URL}/api/fines`);
+                const fines = await response.json();
+
+                const paidFines = fines.filter(function (fine) {
+                    return String(fine.status).toLowerCase() === "paid";
+                });
+
+                const pendingFines = fines.filter(function (fine) {
+                    return String(fine.status).toLowerCase() !== "paid";
+                });
+
+                const paidAmount = paidFines.reduce(function (total, fine) {
+                    return total + Number(fine.fineAmount || 0);
+                }, 0);
+
+                const pendingAmount = pendingFines.reduce(function (total, fine) {
+                    return total + Number(fine.fineAmount || 0);
+                }, 0);
+
+                const totalCount = fines.length || 1;
+                const totalAmount = paidAmount + pendingAmount || 1;
+
+                document.getElementById("paidFineCount").textContent =
+                    paidFines.length;
+
+                document.getElementById("pendingFineCount").textContent =
+                    pendingFines.length;
+
+                document.getElementById("paidAmountReport").textContent =
+                    "₹" + paidAmount;
+
+                document.getElementById("pendingAmountReport").textContent =
+                    "₹" + pendingAmount;
+
+                document.getElementById("paidFineBar").style.width =
+                    (paidFines.length / totalCount) * 100 + "%";
+
+                document.getElementById("pendingFineBar").style.width =
+                    (pendingFines.length / totalCount) * 100 + "%";
+
+                document.getElementById("paidAmountBar").style.width =
+                    (paidAmount / totalAmount) * 100 + "%";
+
+                document.getElementById("pendingAmountBar").style.width =
+                    (pendingAmount / totalAmount) * 100 + "%";
+
+                if (!fines.length) {
+                    reportTableArea.innerHTML = `
+                        <div class="normal-card">
+                            ✅ No fine records available.
+                        </div>
+                    `;
+                    return;
+                }
+
+                reportTableArea.innerHTML = `
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Fine ID</th>
+                                <th>Vehicle</th>
+                                <th>Violation</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            ${
+                                fines.map(function (fine) {
+                                    const isPaid =
+                                        String(fine.status).toLowerCase() === "paid";
+
+                                    return `
+                                        <tr>
+                                            <td>${fine.id}</td>
+                                            <td>${escapeHtml(fine.vehicleNumber)}</td>
+                                            <td>${escapeHtml(fine.violation)}</td>
+                                            <td>₹${fine.fineAmount}</td>
+                                            <td class="${isPaid ? "paid" : "pending"}">
+                                                ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join("")
+                            }
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                reportTableArea.innerHTML = `
+                    <div class="error">
+                        ❌ Report loading failed.
+                    </div>
+                `;
+            }
+        }
+
+        async function loadAuditLogs() {
+            const auditLog = document.getElementById("auditLog");
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/audit-logs`
+                );
+
+                const data = await response.json();
+
+                if (!data.logs.length) {
+                    auditLog.innerHTML = `
+                        <div class="normal-card">
+                            ℹ️ No audit records yet. Search a vehicle to begin.
+                        </div>
+                    `;
+                    return;
+                }
+
+                auditLog.innerHTML = data.logs.map(function (log) {
+                    return `
+                        <div class="audit-card">
+                            <p><strong>Action:</strong> ${escapeHtml(log.action)}</p>
+                            <p><strong>Officer ID:</strong> ${escapeHtml(log.officerId)}</p>
+                            <p><strong>Vehicle:</strong> ${escapeHtml(log.vehicleNumber)}</p>
+                            <p><strong>Details:</strong> ${escapeHtml(log.details)}</p>
+                            <p><strong>Date & Time:</strong> ${formatDateTime(log.dateTime)}</p>
+                        </div>
+                    `;
+                }).join("");
+            } catch (error) {
+                auditLog.innerHTML = `
+                    <div class="error">
+                        ❌ Audit Log loading failed.
+                    </div>
+                `;
+            }
+        }
+
+        async function searchVehicle() {
+            const vehicleNumber = document
+                .getElementById("searchVehicle")
+                .value
+                .trim()
+                .toUpperCase();
+
+            const result = document.getElementById("vehicleResult");
+
+            if (!vehicleNumber) {
+                result.innerHTML = `
+                    <div class="error">
+                        ❌ Please enter vehicle number.
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(vehicleNumber)}?officerId=${encodeURIComponent(loggedInOfficerId)}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    result.innerHTML = `
+                        <div class="error">
+                            ❌ ${data.message}
+                        </div>
+                    `;
+
+                    loadAuditLogs();
+                    return;
+                }
+
+                selectedVehicleNumber = vehicleNumber;
+
+                displayVehicle(data);
+
+                loadAuditLogs();
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        ❌ Backend connection failed.
+                    </div>
+                `;
+            }
+        }
+
+        function displayVehicle(data) {
+            const vehicle = data.vehicle;
+            const fines = data.fines;
+            const result = document.getElementById("vehicleResult");
+
+            const isStolen = vehicle.stolen === true;
+
+            const fineHtml = fines.length
+                ? fines.map(function (fine) {
+                    const isPaid =
+                        String(fine.status).toLowerCase() === "paid";
+
+                    return `
+                        <div class="fine-card">
+                            <p><strong>Fine ID:</strong> ${fine.id}</p>
+                            <p><strong>Violation:</strong> ${escapeHtml(fine.violation)}</p>
+                            <p><strong>Amount:</strong> ₹${fine.fineAmount}</p>
+                            <p>
+                                <strong>Status:</strong>
+                                <span class="${isPaid ? "paid" : "pending"}">
+                                    ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
+                                </span>
+                            </p>
+                        </div>
+                    `;
+                }).join("")
+                : `<div class="normal-card">✅ No fine records found.</div>`;
+
+            result.innerHTML = `
+                ${
+                    isStolen
+                        ? `
+                            <div class="stolen-card">
+                                🚨 <strong>FLAGGED / STOLEN VEHICLE</strong>
+                            </div>
+                        `
+                        : `
+                            <div class="normal-card">
+                                ✅ <strong>Vehicle Status: Normal</strong>
+                            </div>
+                        `
+                }
+
+                <div class="fine-card">
+                    <h2>🚗 Vehicle Verification</h2>
+
+                    <p><strong>Vehicle Number:</strong> ${escapeHtml(vehicle.vehicleNumber)}</p>
+                    <p><strong>Owner Name:</strong> ${escapeHtml(vehicle.ownerName)}</p>
+                    <p><strong>Licence:</strong> ✅ ${escapeHtml(vehicle.licenceStatus)}</p>
+                    <p><strong>Identity:</strong> ✅ ${escapeHtml(vehicle.aadhaarStatus)}</p>
+                    <p><strong>Auto-Pay:</strong> ${escapeHtml(vehicle.autoDebitStatus)}</p>
+                    <p><strong>Vehicle Status:</strong> ${escapeHtml(vehicle.vehicleStatus)}</p>
+
+                    ${
+                        isStolen
+                            ? `
+                                <button
+                                    class="normal-button"
+                                    onclick="markNormal()"
+                                >
+                                    ✅ Remove Stolen Flag
+                                </button>
+                            `
+                            : `
+                                <button
+                                    class="danger-button"
+                                    onclick="markStolen()"
+                                >
+                                    🚨 Flag Vehicle as Stolen
+                                </button>
+                            `
+                    }
+                </div>
+
+                <h2>💰 Fine Records</h2>
+                ${fineHtml}
+            `;
+        }
+
+        async function markStolen() {
+            if (!confirm("Flag this vehicle as STOLEN?")) return;
+
+            await updateVehicleStatus("stolen");
+        }
+
+        async function markNormal() {
+            if (!confirm("Remove stolen flag and mark vehicle as NORMAL?")) return;
+
+            await updateVehicleStatus("normal");
+        }
+
+        async function updateVehicleStatus(action) {
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(selectedVehicleNumber)}/${action}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            officerId: loggedInOfficerId
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert("❌ " + data.message);
+                    return;
+                }
+
+                alert("✅ " + data.message);
+
+                await searchVehicle();
+                await loadStatistics();
+                await loadReports();
+                await loadAuditLogs();
+            } catch (error) {
+                alert("❌ Backend connection failed.");
+            }
+        }
+    </script>
+
+</body>
+</html>

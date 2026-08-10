@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>TN Vehicle SecurePay</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+            background: #f1f5f9;
+        }
+
+        header {
+            padding: 55px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #0f3d70, #1d4ed8);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 38px;
+        }
+
+        header p {
+            margin: 14px 0 0;
+            font-size: 18px;
+            opacity: 0.92;
+        }
+
+        .container {
+            width: min(1150px, 92%);
+            margin: 0 auto;
+            padding: 35px 0;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 22px;
+            align-items: stretch;
+            margin-bottom: 28px;
+        }
+
+        .hero-text,
+        .demo-box,
+        .section-card,
+        .feature-card,
+        .flow-card {
+            border: 1px solid #dbe4ee;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+        }
+
+        .hero-text {
+            padding: 32px;
+        }
+
+        .hero-text h2 {
+            margin-top: 0;
+            color: #0f3d70;
+            font-size: 28px;
+        }
+
+        .hero-text p {
+            color: #475569;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .demo-box {
+            padding: 28px;
+            color: white;
+            text-align: center;
+            background: linear-gradient(135deg, #047857, #16a34a);
+        }
+
+        .demo-box h3 {
+            margin-top: 0;
+            font-size: 23px;
+        }
+
+        .demo-number {
+            margin: 20px 0;
+            padding: 14px;
+            border-radius: 10px;
+            color: #14532d;
+            font-size: 21px;
+            font-weight: bold;
+            background: white;
+        }
+
+        h2.section-title {
+            margin: 38px 0 10px;
+            color: #0f3d70;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .section-subtitle {
+            margin: 0 0 25px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .feature-card {
+            padding: 22px;
+            transition: 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14);
+        }
+
+        .feature-icon {
+            font-size: 34px;
+        }
+
+        .feature-card h3 {
+            margin: 14px 0 10px;
+            color: #123c69;
+            font-size: 20px;
+        }
+
+        .feature-card p {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.55;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+            margin-top: 20px;
+        }
+
+        .section-card {
+            padding: 28px;
+        }
+
+        .section-card h2 {
+            margin-top: 0;
+            color: #0f3d70;
+        }
+
+        .section-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin: 8px 8px 0 0;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #1d4ed8;
+        }
+
+        button:hover {
+            background: #123c9b;
+        }
+
+        .green-button {
+            background: #15803d;
+        }
+
+        .green-button:hover {
+            background: #166534;
+        }
+
+        .officer-button {
+            background: #7c3aed;
+        }
+
+        .officer-button:hover {
+            background: #5b21b6;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .flow-card {
+            padding: 18px 10px;
+            text-align: center;
+        }
+
+        .flow-card strong {
+            display: block;
+            margin-top: 8px;
+            color: #123c69;
+        }
+
+        .flow-card span {
+            display: block;
+            margin-top: 7px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .privacy {
+            margin-top: 30px;
+            padding: 22px;
+            border: 1px solid #fde68a;
+            border-radius: 14px;
+            color: #854d0e;
+            background: #fffbeb;
+        }
+
+        .privacy h3 {
+            margin-top: 0;
+        }
+
+        footer {
+            margin-top: 35px;
+            padding: 24px;
+            color: white;
+            text-align: center;
+            background: #0f172a;
+        }
+
+        footer p {
+            margin: 6px;
+        }
+
+        @media (max-width: 850px) {
+            .hero,
+            .portal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flow-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 520px) {
+            header h1 {
+                font-size: 29px;
+            }
+
+            .feature-grid,
+            .flow-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🚗 TN Vehicle SecurePay</h1>
+        <p>Smart Vehicle, Licence & Fine Management System</p>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div class="hero-text">
+                <h2>Welcome to TN Vehicle SecurePay</h2>
+
+                <p>
+                    This project prototype connects vehicle records,
+                    licence verification, identity verification, traffic fine
+                    management and demo Auto-Pay in one secure platform.
+                </p>
+
+                <button onclick="openOwnerDashboard()">
+                    📊 Open Owner Dashboard
+                </button>
+
+                <button
+                    class="officer-button"
+                    onclick="openOfficerPortal()"
+                >
+                    👮 Open Officer Portal
+                </button>
+            </div>
+
+            <div class="demo-box">
+                <h3>🧪 Demo Vehicle</h3>
+
+                <p>Use this vehicle number for testing</p>
+
+                <div class="demo-number">
+                    TN 01 AB 1234
+                </div>
+
+                <button
+                    class="green-button"
+                    onclick="openDemoDashboard()"
+                >
+                    Open Demo Dashboard
+                </button>
+            </div>
+        </section>
+
+        <h2 class="section-title">✨ Available Features</h2>
+
+        <p class="section-subtitle">
+            All project modules are shown here in one main website.
+        </p>
+
+        <section class="feature-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Vehicle Registration</h3>
+                <p>
+                    Vehicle owner can register vehicle details in the system.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🪪</div>
+                <h3>Licence Verification</h3>
+                <p>
+                    Driving licence verification status is shown as a demo.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🆔</div>
+                <h3>Identity Verification</h3>
+                <p>
+                    Identity verification status is displayed with masked data.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Fine Management</h3>
+                <p>
+                    View fine amount, violation, due date and payment status.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3>Due-Date Reminder</h3>
+                <p>
+                    Pending fine due dates and overdue warnings are displayed.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>3-Month Auto-Pay</h3>
+                <p>
+                    Demo bank authorization supports three-month Auto-Pay.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📜</div>
+                <h3>Payment History</h3>
+                <p>
+                    Paid fine details, payment method and paid date are saved.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🧾</div>
+                <h3>Digital Receipt</h3>
+                <p>
+                    Paid fine can generate a printable digital payment receipt.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🚨</div>
+                <h3>Stolen Vehicle Alert</h3>
+                <p>
+                    Stolen vehicle status is prominently shown to the owner.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👮</div>
+                <h3>Officer Verification</h3>
+                <p>
+                    Transport officer can search and verify vehicle records.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Officer Statistics</h3>
+                <p>
+                    Total vehicle, fines, payment and stolen vehicle summary.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>Masked Data Security</h3>
+                <p>
+                    Aadhaar and bank account details are masked in this demo.
+                </p>
+            </div>
+
+        </section>
+
+        <h2 class="section-title">🚪 Access Project Modules</h2>
+
+        <section class="portal-grid">
+
+            <div class="section-card">
+                <h2>👤 Vehicle Owner</h2>
+
+                <p>
+                    Register vehicle, check fine records, see reminders,
+                    pay through Demo Auto-Pay, view Payment History and
+                    generate Digital Receipt.
+                </p>
+
+                <button onclick="openOwnerRegistration()">
+                    🚗 Register Vehicle
+                </button>
+
+                <button onclick="openOwnerDashboard()">
+                    📊 Owner Dashboard
+                </button>
+            </div>
+
+            <div class="section-card">
+                <h2>👮 Transport Officer</h2>
+
+                <p>
+                    Search vehicle records, verify owner details and
+                    identify or flag stolen vehicles.
+                </p>
+
+                <button
+                    class="officer-button"
+                    onclick="openOfficerPortal()"
+                >
+                    🚔 Officer Portal
+                </button>
+            </div>
+
+        </section>
+
+        <h2 class="section-title">🔄 Application Flow</h2>
+
+        <section class="flow-grid">
+
+            <div class="flow-card">
+                🚗
+                <strong>Vehicle</strong>
+                <span>Register vehicle number</span>
+            </div>
+
+            <div class="flow-card">
+                🪪
+                <strong>Licence</strong>
+                <span>Demo verification</span>
+            </div>
+
+            <div class="flow-card">
+                🆔
+                <strong>Identity</strong>
+                <span>Masked identity check</span>
+            </div>
+
+            <div class="flow-card">
+                🏦
+                <strong>Bank</strong>
+                <span>Demo authorization</span>
+            </div>
+
+            <div class="flow-card">
+                💳
+                <strong>Auto-Pay</strong>
+                <span>Fine payment demo</span>
+            </div>
+
+            <div class="flow-card">
+                👮
+                <strong>Officer</strong>
+                <span>Vehicle verification</span>
+            </div>
+
+        </section>
+
+        <section class="privacy">
+            <h3>🔐 Privacy & Security Notice</h3>
+
+            <p>
+                This is a college project prototype. Aadhaar numbers,
+                bank credentials and sensitive owner data are masked.
+            </p>
+
+            <p>
+                No real Aadhaar verification, bank linking or money transaction
+                happens in this application.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><strong>TN Vehicle SecurePay — Project Prototype</strong></p>
+        <p>© 2026</p>
+    </footer>
+
+    <script>
+        function openOwnerRegistration() {
+            window.location.href = "/owner-register.html";
+        }
+
+        function openOwnerDashboard() {
+            window.location.href = "/owner-dashboard.html";
+        }
+
+        function openOfficerPortal() {
+            window.location.href = "/admin.html";
+        }
+
+        function openDemoDashboard() {
+            window.location.href =
+                "/owner-dashboard.html?vehicle=TN%2001%20AB%201234";
+        }
+    </script>
+
+</body>
+</html>

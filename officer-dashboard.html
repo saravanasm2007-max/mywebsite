@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Officer Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .officer-header {
+            background: #0f172a;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .officer-card {
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            background: #ffffff;
+        }
+
+        .result-box {
+            background: #f8fafc;
+            border: 1px solid #dbe4ee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+
+        .fine-box {
+            padding: 14px;
+            margin-top: 12px;
+            border-left: 4px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .danger-box {
+            padding: 16px;
+            border-radius: 10px;
+            color: #991b1b;
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            margin: 15px 0;
+        }
+
+        .normal-box {
+            padding: 16px;
+            border-radius: 10px;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            margin: 15px 0;
+        }
+
+        .danger-button {
+            background: #dc2626;
+        }
+
+        .normal-button {
+            background: #15803d;
+        }
+
+        .pending {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .paid {
+            color: #15803d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="officer-header">
+        <h1>👮 Transport Officer Dashboard</h1>
+        <p>TN Vehicle SecurePay – Officer Portal</p>
+    </header>
+
+    <div class="container">
+
+        <div class="officer-card">
+            <h2>📊 System Statistics</h2>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <h4>Total Vehicles</h4>
+                    <p id="totalVehicles">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Total Fines</h4>
+                    <p id="totalFines">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Pending Fines</h4>
+                    <p id="pendingFines">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Paid Fines</h4>
+                    <p id="paidFines">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Pending Amount</h4>
+                    <p id="pendingAmount">₹0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Paid Amount</h4>
+                    <p id="paidAmount">₹0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Stolen Vehicles</h4>
+                    <p id="stolenVehicles">0</p>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Auto-Pay Active</h4>
+                    <p id="autoPayVehicles">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="officer-card">
+            <h2>🔍 Search Vehicle</h2>
+
+            <input
+                id="searchVehicleNumber"
+                type="text"
+                placeholder="TN 01 AB 1234"
+            >
+
+            <button onclick="searchVehicle()">
+                Search Vehicle
+            </button>
+
+            <div id="message"></div>
+        </div>
+
+        <div id="vehicleResult" class="hidden">
+            <div class="result-box">
+                <h2>🚗 Vehicle Details</h2>
+
+                <div id="vehicleAlert"></div>
+
+                <p><strong>Vehicle Number:</strong> <span id="vehicleNumber">-</span></p>
+                <p><strong>Owner Name:</strong> <span id="ownerName">-</span></p>
+                <p><strong>Licence Status:</strong> <span id="licenceStatus">-</span></p>
+                <p><strong>Identity Status:</strong> <span id="identityStatus">-</span></p>
+                <p><strong>Bank:</strong> <span id="bankName">-</span></p>
+                <p><strong>Masked Account:</strong> <span id="bankAccount">-</span></p>
+                <p><strong>Auto-Pay:</strong> <span id="autoPayStatus">-</span></p>
+                <p><strong>Vehicle Status:</strong> <span id="status">-</span></p>
+
+                <div id="actionButtons"></div>
+            </div>
+
+            <div class="result-box">
+                <h2>💰 Fine Records</h2>
+                <div id="fineRecords"></div>
+            </div>
+        </div>
+
+        <button onclick="goHome()">🏠 Back to Home</button>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:3000";
+        let selectedVehicleNumber = "";
+
+        function escapeHtml(value) {
+            return String(value || "-")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function formatDate(value) {
+            if (!value) return "-";
+
+            return new Date(value).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+        }
+
+        async function loadStatistics() {
+            try {
+                const response = await fetch(`${API_URL}/api/officer/statistics`);
+                const data = await response.json();
+
+                if (!response.ok) return;
+
+                const stats = data.statistics;
+
+                document.getElementById("totalVehicles").textContent = stats.totalVehicles;
+                document.getElementById("totalFines").textContent = stats.totalFines;
+                document.getElementById("pendingFines").textContent = stats.pendingFines;
+                document.getElementById("paidFines").textContent = stats.paidFines;
+                document.getElementById("pendingAmount").textContent = "₹" + stats.pendingAmount;
+                document.getElementById("paidAmount").textContent = "₹" + stats.paidAmount;
+                document.getElementById("stolenVehicles").textContent = stats.stolenVehicles;
+                document.getElementById("autoPayVehicles").textContent = stats.autoPayVehicles;
+            } catch (error) {
+                console.log("Statistics loading failed.");
+            }
+        }
+
+        async function searchVehicle() {
+            const vehicleNumber = document
+                .getElementById("searchVehicleNumber")
+                .value
+                .trim()
+                .toUpperCase();
+
+            const message = document.getElementById("message");
+
+            if (!vehicleNumber) {
+                message.innerHTML = `<div class="error">❌ Enter vehicle number.</div>`;
+                return;
+            }
+
+            message.innerHTML = `<div class="success">🔍 Searching vehicle...</div>`;
+
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(vehicleNumber)}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById("vehicleResult").classList.add("hidden");
+                    message.innerHTML = `<div class="error">❌ ${data.message}</div>`;
+                    return;
+                }
+
+                selectedVehicleNumber = vehicleNumber;
+
+                showVehicle(data.vehicle);
+                showFines(data.fines);
+
+                document.getElementById("vehicleResult").classList.remove("hidden");
+
+                message.innerHTML = `<div class="success">✅ Vehicle found successfully.</div>`;
+            } catch (error) {
+                message.innerHTML = `
+                    <div class="error">
+                        ❌ Backend connection failed. Run <strong>node server.js</strong>
+                    </div>
+                `;
+            }
+        }
+
+        function showVehicle(vehicle) {
+            document.getElementById("vehicleNumber").textContent = vehicle.vehicleNumber;
+            document.getElementById("ownerName").textContent = vehicle.ownerName;
+            document.getElementById("licenceStatus").textContent = "✅ " + vehicle.licenceStatus;
+            document.getElementById("identityStatus").textContent = "✅ " + vehicle.aadhaarStatus;
+            document.getElementById("bankName").textContent = vehicle.bankName || "-";
+            document.getElementById("bankAccount").textContent = vehicle.bankAccountMasked || "-";
+            document.getElementById("autoPayStatus").textContent =
+                (vehicle.autoDebitStatus || "Not Active") +
+                " (" + (vehicle.authorizationMonths || 0) + " Months)";
+            document.getElementById("status").textContent = vehicle.vehicleStatus;
+
+            const alertArea = document.getElementById("vehicleAlert");
+            const actionButtons = document.getElementById("actionButtons");
+
+            if (vehicle.stolen === true) {
+                alertArea.innerHTML = `
+                    <div class="danger-box">
+                        🚨 <strong>STOLEN VEHICLE ALERT</strong><br>
+                        This vehicle is currently flagged as stolen.
+                    </div>
+                `;
+
+                actionButtons.innerHTML = `
+                    <button class="normal-button" onclick="markNormal()">
+                        ✅ Remove Stolen Flag
+                    </button>
+                `;
+            } else {
+                alertArea.innerHTML = `
+                    <div class="normal-box">
+                        ✅ Vehicle status is normal.
+                    </div>
+                `;
+
+                actionButtons.innerHTML = `
+                    <button class="danger-button" onclick="markStolen()">
+                        🚨 Mark as Stolen
+                    </button>
+                `;
+            }
+        }
+
+        function showFines(fines) {
+            const fineRecords = document.getElementById("fineRecords");
+
+            if (fines.length === 0) {
+                fineRecords.innerHTML = `<div class="normal-box">✅ No fines found.</div>`;
+                return;
+            }
+
+            fineRecords.innerHTML = fines.map(function (fine) {
+                const isPaid = String(fine.status).toLowerCase() === "paid";
+
+                return `
+                    <div class="fine-box">
+                        <p><strong>Fine ID:</strong> ${fine.id}</p>
+                        <p><strong>Violation:</strong> ${escapeHtml(fine.violation)}</p>
+                        <p><strong>Amount:</strong> ₹${fine.fineAmount}</p>
+                        <p><strong>Registered Date:</strong> ${formatDate(fine.registeredDate)}</p>
+                        <p><strong>Due Date:</strong> ${formatDate(fine.dueDate)}</p>
+                        <p>
+                            <strong>Status:</strong>
+                            <span class="${isPaid ? "paid" : "pending"}">
+                                ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
+                            </span>
+                        </p>
+                        ${
+                            isPaid
+                                ? `<p><strong>Payment Method:</strong> ${escapeHtml(fine.paymentMethod)}</p>`
+                                : ""
+                        }
+                    </div>
+                `;
+            }).join("");
+        }
+
+        async function markStolen() {
+            const confirmation = confirm(
+                "இந்த vehicle-ஐ STOLEN ஆக flag பண்ணலாமா?"
+            );
+
+            if (!confirmation) return;
+
+            await updateVehicleStatus("stolen");
+        }
+
+        async function markNormal() {
+            const confirmation = confirm(
+                "Stolen flag remove செய்து vehicle status NORMAL ஆக மாற்றலாமா?"
+            );
+
+            if (!confirmation) return;
+
+            await updateVehicleStatus("normal");
+        }
+
+        async function updateVehicleStatus(action) {
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(selectedVehicleNumber)}/${action}`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert("❌ " + data.message);
+                    return;
+                }
+
+                alert("✅ " + data.message);
+
+                await searchVehicle();
+                await loadStatistics();
+            } catch (error) {
+                alert("❌ Status update failed.");
+            }
+        }
+
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        loadStatistics();
+    </script>
+</body>
+</html>
