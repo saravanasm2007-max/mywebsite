@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -165,7 +166,76 @@
             background: #123c69;
         }
 
+        /* ==============================
+           FINE MANAGEMENT
+        ============================== */
+
+        .fine-management {
+            padding: 20px;
+            margin-top: 18px;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            background: #eff6ff;
+        }
+
+        .fine-management h3 {
+            margin-top: 0;
+            color: #123c69;
+        }
+
+        .fine-management label {
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .fine-management select,
+        .fine-management input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .fine-management button {
+            margin-top: 18px;
+        }
+
+        .fine-success {
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 8px;
+            color: #166534;
+            border: 1px solid #86efac;
+            background: #dcfce7;
+        }
+
+        .fine-error {
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 8px;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            background: #fee2e2;
+        }
+
+        .selected-vehicle {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            color: #1e3a8a;
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            font-weight: bold;
+        }
+
         @media (max-width: 850px) {
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -180,6 +250,7 @@
         }
 
         @media (max-width: 480px) {
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -196,7 +267,12 @@
 
     <div class="container">
 
+        <!-- ==============================
+             LOGIN
+        ============================== -->
+
         <div class="card" id="loginSection">
+
             <h2>👮 Officer Login</h2>
 
             <label>Officer ID</label>
@@ -215,17 +291,31 @@
                 placeholder="123456"
             >
 
-            <button onclick="login()">Login</button>
+            <button onclick="login()">
+                Login
+            </button>
 
             <div id="loginMessage"></div>
+
         </div>
+
+
+        <!-- ==============================
+             DASHBOARD
+        ============================== -->
 
         <div id="dashboard" class="hidden">
 
+            <!-- ==============================
+                 STATISTICS
+            ============================== -->
+
             <div class="card">
+
                 <h2>📊 Officer Statistics</h2>
 
                 <div class="stats-grid">
+
                     <div class="stat-box">
                         <h4>Total Vehicles</h4>
                         <p id="totalVehicles">0</p>
@@ -265,90 +355,131 @@
                         <h4>Auto-Pay Active</h4>
                         <p id="autoPayVehicles">0</p>
                     </div>
+
                 </div>
+
             </div>
 
+
+            <!-- ==============================
+                 REPORTS
+            ============================== -->
+
             <div class="card">
+
                 <h2>📈 Fine Reports & Analytics</h2>
 
                 <div class="report-grid">
+
                     <div class="chart-box">
+
                         <h3>Fine Status Report</h3>
 
                         <div class="chart-row">
+
                             <div class="chart-label">
                                 <span>✅ Paid Fines</span>
                                 <span id="paidFineCount">0</span>
                             </div>
 
                             <div class="chart-track">
+
                                 <div
                                     id="paidFineBar"
                                     class="chart-fill paid-fill"
                                     style="width: 0%;"
                                 ></div>
+
                             </div>
+
                         </div>
 
+
                         <div class="chart-row">
+
                             <div class="chart-label">
                                 <span>⚠️ Pending Fines</span>
                                 <span id="pendingFineCount">0</span>
                             </div>
 
                             <div class="chart-track">
+
                                 <div
                                     id="pendingFineBar"
                                     class="chart-fill pending-fill"
                                     style="width: 0%;"
                                 ></div>
+
                             </div>
+
                         </div>
+
                     </div>
 
+
                     <div class="chart-box">
+
                         <h3>Fine Amount Report</h3>
 
                         <div class="chart-row">
+
                             <div class="chart-label">
                                 <span>✅ Paid Amount</span>
                                 <span id="paidAmountReport">₹0</span>
                             </div>
 
                             <div class="chart-track">
+
                                 <div
                                     id="paidAmountBar"
                                     class="chart-fill paid-fill"
                                     style="width: 0%;"
                                 ></div>
+
                             </div>
+
                         </div>
 
+
                         <div class="chart-row">
+
                             <div class="chart-label">
                                 <span>⚠️ Pending Amount</span>
                                 <span id="pendingAmountReport">₹0</span>
                             </div>
 
                             <div class="chart-track">
+
                                 <div
                                     id="pendingAmountBar"
                                     class="chart-fill pending-fill"
                                     style="width: 0%;"
                                 ></div>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
 
                 <h3>📋 Fine Report Table</h3>
 
                 <div id="reportTableArea">
                     Loading report...
                 </div>
+
             </div>
 
+
+            <!-- ==============================
+                 SEARCH VEHICLE
+            ============================== -->
+
             <div class="card">
+
                 <h2>🔍 Search Vehicle</h2>
 
                 <input
@@ -369,36 +500,65 @@
                 </button>
 
                 <div id="vehicleResult"></div>
+
             </div>
 
+
+            <!-- ==============================
+                 AUDIT LOG
+            ============================== -->
+
             <div class="card">
+
                 <h2>🔐 Officer Audit Log</h2>
 
                 <p>
-                    Vehicle searches and vehicle-status changes are recorded here.
+                    Vehicle searches, fines and vehicle-status changes are recorded here.
                 </p>
 
                 <div id="auditLog">
                     Loading audit records...
                 </div>
+
             </div>
 
         </div>
+
     </div>
 
+
+    <!-- ==============================
+         JAVASCRIPT
+    ============================== -->
+
     <script>
+
         const API_URL = "https://mywebsite-6miv.onrender.com";
+
         let loggedInOfficerId = "";
+
         let selectedVehicleNumber = "";
 
+
+        /* ==============================
+           HTML SECURITY
+        ============================== */
+
         function escapeHtml(value) {
+
             return String(value || "-")
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;");
         }
 
+
+        /* ==============================
+           DATE FORMAT
+        ============================== */
+
         function formatDateTime(value) {
+
             if (!value) return "-";
 
             return new Date(value).toLocaleString("en-IN", {
@@ -407,23 +567,34 @@
             });
         }
 
+
+        /* ==============================
+           LOGIN
+        ============================== */
+
         function login() {
-            const officerId = document
-                .getElementById("officerId")
-                .value
-                .trim();
 
-            const password = document
-                .getElementById("officerPassword")
-                .value
-                .trim();
+            const officerId =
+                document
+                    .getElementById("officerId")
+                    .value
+                    .trim();
 
-            const message = document.getElementById("loginMessage");
+            const password =
+                document
+                    .getElementById("officerPassword")
+                    .value
+                    .trim();
+
+            const message =
+                document.getElementById("loginMessage");
+
 
             if (
                 officerId === "TN-OFFICER-001" &&
                 password === "123456"
             ) {
+
                 loggedInOfficerId = officerId;
 
                 document
@@ -436,143 +607,273 @@
                     .classList
                     .remove("hidden");
 
+
                 loadStatistics();
+
                 loadReports();
+
                 loadAuditLogs();
 
                 message.innerHTML = "";
+
             } else {
+
                 message.innerHTML = `
                     <div class="error">
                         ❌ Invalid officer login.
                         <br><br>
-                        Demo ID: <strong>TN-OFFICER-001</strong>
+
+                        Demo ID:
+                        <strong>TN-OFFICER-001</strong>
+
                         <br>
-                        Password: <strong>123456</strong>
+
+                        Password:
+                        <strong>123456</strong>
                     </div>
                 `;
             }
         }
 
+
+        /* ==============================
+           LOGOUT
+        ============================== */
+
         function logout() {
+
             loggedInOfficerId = "";
+
             selectedVehicleNumber = "";
+
 
             document
                 .getElementById("dashboard")
                 .classList
                 .add("hidden");
 
+
             document
                 .getElementById("loginSection")
                 .classList
                 .remove("hidden");
 
-            document.getElementById("officerPassword").value = "";
-            document.getElementById("searchVehicle").value = "";
-            document.getElementById("vehicleResult").innerHTML = "";
-            document.getElementById("auditLog").innerHTML = "";
+
+            document
+                .getElementById("officerPassword")
+                .value = "";
+
+
+            document
+                .getElementById("searchVehicle")
+                .value = "";
+
+
+            document
+                .getElementById("vehicleResult")
+                .innerHTML = "";
+
+
+            document
+                .getElementById("auditLog")
+                .innerHTML = "";
         }
+
+
+        /* ==============================
+           STATISTICS
+        ============================== */
 
         async function loadStatistics() {
-            const response = await fetch(
-                `${API_URL}/api/officer/statistics`
-            );
 
-            const data = await response.json();
+            try {
 
-            if (!response.ok) return;
+                const response = await fetch(
+                    `${API_URL}/api/officer/statistics`
+                );
 
-            const stats = data.statistics;
+                const data = await response.json();
 
-            document.getElementById("totalVehicles").textContent =
-                stats.totalVehicles;
+                if (!response.ok) return;
 
-            document.getElementById("totalFines").textContent =
-                stats.totalFines;
+                const stats = data.statistics;
 
-            document.getElementById("pendingFines").textContent =
-                stats.pendingFines;
 
-            document.getElementById("paidFines").textContent =
-                stats.paidFines;
+                document
+                    .getElementById("totalVehicles")
+                    .textContent = stats.totalVehicles;
 
-            document.getElementById("pendingAmount").textContent =
-                "₹" + stats.pendingAmount;
 
-            document.getElementById("paidAmount").textContent =
-                "₹" + stats.paidAmount;
+                document
+                    .getElementById("totalFines")
+                    .textContent = stats.totalFines;
 
-            document.getElementById("stolenVehicles").textContent =
-                stats.stolenVehicles;
 
-            document.getElementById("autoPayVehicles").textContent =
-                stats.autoPayVehicles;
+                document
+                    .getElementById("pendingFines")
+                    .textContent = stats.pendingFines;
+
+
+                document
+                    .getElementById("paidFines")
+                    .textContent = stats.paidFines;
+
+
+                document
+                    .getElementById("pendingAmount")
+                    .textContent = "₹" + stats.pendingAmount;
+
+
+                document
+                    .getElementById("paidAmount")
+                    .textContent = "₹" + stats.paidAmount;
+
+
+                document
+                    .getElementById("stolenVehicles")
+                    .textContent = stats.stolenVehicles;
+
+
+                document
+                    .getElementById("autoPayVehicles")
+                    .textContent = stats.autoPayVehicles;
+
+            } catch (error) {
+
+                console.error("Statistics error:", error);
+
+            }
         }
 
+
+        /* ==============================
+           REPORTS
+        ============================== */
+
         async function loadReports() {
+
             const reportTableArea =
                 document.getElementById("reportTableArea");
 
+
             try {
-                const response = await fetch(`${API_URL}/api/fines`);
-                const fines = await response.json();
 
-                const paidFines = fines.filter(function (fine) {
-                    return String(fine.status).toLowerCase() === "paid";
-                });
+                const response =
+                    await fetch(`${API_URL}/api/fines`);
 
-                const pendingFines = fines.filter(function (fine) {
-                    return String(fine.status).toLowerCase() !== "paid";
-                });
+                const fines =
+                    await response.json();
 
-                const paidAmount = paidFines.reduce(function (total, fine) {
-                    return total + Number(fine.fineAmount || 0);
-                }, 0);
 
-                const pendingAmount = pendingFines.reduce(function (total, fine) {
-                    return total + Number(fine.fineAmount || 0);
-                }, 0);
+                const paidFines =
+                    fines.filter(function (fine) {
 
-                const totalCount = fines.length || 1;
-                const totalAmount = paidAmount + pendingAmount || 1;
+                        return String(fine.status)
+                            .toLowerCase() === "paid";
 
-                document.getElementById("paidFineCount").textContent =
+                    });
+
+
+                const pendingFines =
+                    fines.filter(function (fine) {
+
+                        return String(fine.status)
+                            .toLowerCase() !== "paid";
+
+                    });
+
+
+                const paidAmount =
+                    paidFines.reduce(function (total, fine) {
+
+                        return total +
+                            Number(fine.fineAmount || 0);
+
+                    }, 0);
+
+
+                const pendingAmount =
+                    pendingFines.reduce(function (total, fine) {
+
+                        return total +
+                            Number(fine.fineAmount || 0);
+
+                    }, 0);
+
+
+                const totalCount =
+                    fines.length || 1;
+
+
+                const totalAmount =
+                    paidAmount + pendingAmount || 1;
+
+
+                document
+                    .getElementById("paidFineCount")
+                    .textContent =
                     paidFines.length;
 
-                document.getElementById("pendingFineCount").textContent =
+
+                document
+                    .getElementById("pendingFineCount")
+                    .textContent =
                     pendingFines.length;
 
-                document.getElementById("paidAmountReport").textContent =
+
+                document
+                    .getElementById("paidAmountReport")
+                    .textContent =
                     "₹" + paidAmount;
 
-                document.getElementById("pendingAmountReport").textContent =
+
+                document
+                    .getElementById("pendingAmountReport")
+                    .textContent =
                     "₹" + pendingAmount;
 
-                document.getElementById("paidFineBar").style.width =
+
+                document
+                    .getElementById("paidFineBar")
+                    .style.width =
                     (paidFines.length / totalCount) * 100 + "%";
 
-                document.getElementById("pendingFineBar").style.width =
+
+                document
+                    .getElementById("pendingFineBar")
+                    .style.width =
                     (pendingFines.length / totalCount) * 100 + "%";
 
-                document.getElementById("paidAmountBar").style.width =
+
+                document
+                    .getElementById("paidAmountBar")
+                    .style.width =
                     (paidAmount / totalAmount) * 100 + "%";
 
-                document.getElementById("pendingAmountBar").style.width =
+
+                document
+                    .getElementById("pendingAmountBar")
+                    .style.width =
                     (pendingAmount / totalAmount) * 100 + "%";
 
+
                 if (!fines.length) {
+
                     reportTableArea.innerHTML = `
                         <div class="normal-card">
                             ✅ No fine records available.
                         </div>
                     `;
+
                     return;
                 }
 
+
                 reportTableArea.innerHTML = `
                     <table class="report-table">
+
                         <thead>
+
                             <tr>
                                 <th>Fine ID</th>
                                 <th>Vehicle</th>
@@ -580,31 +881,61 @@
                                 <th>Amount</th>
                                 <th>Status</th>
                             </tr>
+
                         </thead>
 
                         <tbody>
+
                             ${
                                 fines.map(function (fine) {
+
                                     const isPaid =
-                                        String(fine.status).toLowerCase() === "paid";
+                                        String(fine.status)
+                                            .toLowerCase() === "paid";
+
 
                                     return `
                                         <tr>
-                                            <td>${fine.id}</td>
-                                            <td>${escapeHtml(fine.vehicleNumber)}</td>
-                                            <td>${escapeHtml(fine.violation)}</td>
-                                            <td>₹${fine.fineAmount}</td>
-                                            <td class="${isPaid ? "paid" : "pending"}">
-                                                ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
+
+                                            <td>
+                                                ${escapeHtml(fine.id)}
                                             </td>
+
+                                            <td>
+                                                ${escapeHtml(fine.vehicleNumber)}
+                                            </td>
+
+                                            <td>
+                                                ${escapeHtml(fine.violation)}
+                                            </td>
+
+                                            <td>
+                                                ₹${escapeHtml(fine.fineAmount)}
+                                            </td>
+
+                                            <td
+                                                class="${isPaid ? "paid" : "pending"}"
+                                            >
+                                                ${
+                                                    isPaid
+                                                        ? "✅ PAID"
+                                                        : "⚠️ PENDING"
+                                                }
+                                            </td>
+
                                         </tr>
                                     `;
+
                                 }).join("")
                             }
+
                         </tbody>
+
                     </table>
                 `;
+
             } catch (error) {
+
                 reportTableArea.innerHTML = `
                     <div class="error">
                         ❌ Report loading failed.
@@ -613,37 +944,81 @@
             }
         }
 
+
+        /* ==============================
+           AUDIT LOG
+        ============================== */
+
         async function loadAuditLogs() {
-            const auditLog = document.getElementById("auditLog");
+
+            const auditLog =
+                document.getElementById("auditLog");
+
 
             try {
-                const response = await fetch(
-                    `${API_URL}/api/officer/audit-logs`
-                );
 
-                const data = await response.json();
+                const response =
+                    await fetch(
+                        `${API_URL}/api/officer/audit-logs`
+                    );
+
+
+                const data =
+                    await response.json();
+
 
                 if (!data.logs.length) {
+
                     auditLog.innerHTML = `
                         <div class="normal-card">
-                            ℹ️ No audit records yet. Search a vehicle to begin.
+                            ℹ️ No audit records yet.
+                            Search a vehicle to begin.
                         </div>
                     `;
+
                     return;
                 }
 
-                auditLog.innerHTML = data.logs.map(function (log) {
-                    return `
-                        <div class="audit-card">
-                            <p><strong>Action:</strong> ${escapeHtml(log.action)}</p>
-                            <p><strong>Officer ID:</strong> ${escapeHtml(log.officerId)}</p>
-                            <p><strong>Vehicle:</strong> ${escapeHtml(log.vehicleNumber)}</p>
-                            <p><strong>Details:</strong> ${escapeHtml(log.details)}</p>
-                            <p><strong>Date & Time:</strong> ${formatDateTime(log.dateTime)}</p>
-                        </div>
-                    `;
-                }).join("");
+
+                auditLog.innerHTML =
+                    data.logs.map(function (log) {
+
+                        return `
+                            <div class="audit-card">
+
+                                <p>
+                                    <strong>Action:</strong>
+                                    ${escapeHtml(log.action)}
+                                </p>
+
+                                <p>
+                                    <strong>Officer ID:</strong>
+                                    ${escapeHtml(log.officerId)}
+                                </p>
+
+                                <p>
+                                    <strong>Vehicle:</strong>
+                                    ${escapeHtml(log.vehicleNumber)}
+                                </p>
+
+                                <p>
+                                    <strong>Details:</strong>
+                                    ${escapeHtml(log.details)}
+                                </p>
+
+                                <p>
+                                    <strong>Date & Time:</strong>
+                                    ${formatDateTime(log.dateTime)}
+                                </p>
+
+                            </div>
+                        `;
+
+                    }).join("");
+
+
             } catch (error) {
+
                 auditLog.innerHTML = `
                     <div class="error">
                         ❌ Audit Log loading failed.
@@ -652,48 +1027,74 @@
             }
         }
 
-        async function searchVehicle() {
-            const vehicleNumber = document
-                .getElementById("searchVehicle")
-                .value
-                .trim()
-                .toUpperCase();
 
-            const result = document.getElementById("vehicleResult");
+        /* ==============================
+           SEARCH VEHICLE
+        ============================== */
+
+        async function searchVehicle() {
+
+            const vehicleNumber =
+                document
+                    .getElementById("searchVehicle")
+                    .value
+                    .trim()
+                    .toUpperCase();
+
+
+            const result =
+                document.getElementById("vehicleResult");
+
 
             if (!vehicleNumber) {
+
                 result.innerHTML = `
                     <div class="error">
                         ❌ Please enter vehicle number.
                     </div>
                 `;
+
                 return;
             }
 
-            try {
-                const response = await fetch(
-                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(vehicleNumber)}?officerId=${encodeURIComponent(loggedInOfficerId)}`
-                );
 
-                const data = await response.json();
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/officer/vehicle/${encodeURIComponent(vehicleNumber)}?officerId=${encodeURIComponent(loggedInOfficerId)}`
+                    );
+
+
+                const data =
+                    await response.json();
+
 
                 if (!response.ok) {
+
                     result.innerHTML = `
                         <div class="error">
-                            ❌ ${data.message}
+                            ❌ ${escapeHtml(data.message)}
                         </div>
                     `;
 
                     loadAuditLogs();
+
                     return;
                 }
 
-                selectedVehicleNumber = vehicleNumber;
+
+                selectedVehicleNumber =
+                    vehicleNumber;
+
 
                 displayVehicle(data);
 
                 loadAuditLogs();
+
+
             } catch (error) {
+
                 result.innerHTML = `
                     <div class="error">
                         ❌ Backend connection failed.
@@ -702,61 +1103,182 @@
             }
         }
 
+
+        /* ==============================
+           DISPLAY VEHICLE
+        ============================== */
+
         function displayVehicle(data) {
-            const vehicle = data.vehicle;
-            const fines = data.fines;
-            const result = document.getElementById("vehicleResult");
 
-            const isStolen = vehicle.stolen === true;
+            const vehicle =
+                data.vehicle;
 
-            const fineHtml = fines.length
-                ? fines.map(function (fine) {
-                    const isPaid =
-                        String(fine.status).toLowerCase() === "paid";
 
-                    return `
-                        <div class="fine-card">
-                            <p><strong>Fine ID:</strong> ${fine.id}</p>
-                            <p><strong>Violation:</strong> ${escapeHtml(fine.violation)}</p>
-                            <p><strong>Amount:</strong> ₹${fine.fineAmount}</p>
-                            <p>
-                                <strong>Status:</strong>
-                                <span class="${isPaid ? "paid" : "pending"}">
-                                    ${isPaid ? "✅ PAID" : "⚠️ PENDING"}
-                                </span>
-                            </p>
+            const fines =
+                data.fines;
+
+
+            const result =
+                document.getElementById("vehicleResult");
+
+
+            const isStolen =
+                vehicle.stolen === true;
+
+
+            const fineHtml =
+                fines.length
+
+                    ? fines.map(function (fine) {
+
+                        const isPaid =
+                            String(fine.status)
+                                .toLowerCase() === "paid";
+
+
+                        return `
+                            <div class="fine-card">
+
+                                <p>
+                                    <strong>Fine ID:</strong>
+                                    ${escapeHtml(fine.id)}
+                                </p>
+
+                                <p>
+                                    <strong>Violation:</strong>
+                                    ${escapeHtml(fine.violation)}
+                                </p>
+
+                                <p>
+                                    <strong>Amount:</strong>
+                                    ₹${escapeHtml(fine.fineAmount)}
+                                </p>
+
+                                <p>
+                                    <strong>Registered Date:</strong>
+                                    ${escapeHtml(fine.registeredDate)}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+
+                                    <span
+                                        class="${isPaid ? "paid" : "pending"}"
+                                    >
+                                        ${
+                                            isPaid
+                                                ? "✅ PAID"
+                                                : "⚠️ PENDING"
+                                        }
+                                    </span>
+
+                                </p>
+
+                            </div>
+                        `;
+
+                    }).join("")
+
+                    : `
+                        <div class="normal-card">
+                            ✅ No fine records found.
                         </div>
                     `;
-                }).join("")
-                : `<div class="normal-card">✅ No fine records found.</div>`;
+
 
             result.innerHTML = `
+
                 ${
                     isStolen
+
                         ? `
                             <div class="stolen-card">
-                                🚨 <strong>FLAGGED / STOLEN VEHICLE</strong>
+                                🚨
+                                <strong>
+                                    FLAGGED / STOLEN VEHICLE
+                                </strong>
                             </div>
                         `
+
                         : `
                             <div class="normal-card">
-                                ✅ <strong>Vehicle Status: Normal</strong>
+                                ✅
+                                <strong>
+                                    Vehicle Status: Normal
+                                </strong>
                             </div>
                         `
                 }
 
-                <div class="fine-card">
-                    <h2>🚗 Vehicle Verification</h2>
 
-                    <p><strong>Vehicle Number:</strong> ${escapeHtml(vehicle.vehicleNumber)}</p>
-                    <p><strong>Owner Name:</strong> ${escapeHtml(vehicle.ownerName)}</p>
-                    <p><strong>Licence:</strong> ✅ ${escapeHtml(vehicle.licenceStatus)}</p>
-                    <p><strong>Identity:</strong> ✅ ${escapeHtml(vehicle.aadhaarStatus)}</p>
-                    <p><strong>Auto-Pay:</strong> ${escapeHtml(vehicle.autoDebitStatus)}</p>
-                    <p><strong>Vehicle Status:</strong> ${escapeHtml(vehicle.vehicleStatus)}</p>
+                <!-- VEHICLE DETAILS -->
+
+                <div class="fine-card">
+
+                    <h2>
+                        🚗 Vehicle Verification
+                    </h2>
+
+
+                    <p>
+                        <strong>
+                            Vehicle Number:
+                        </strong>
+
+                        ${escapeHtml(vehicle.vehicleNumber)}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Owner Name:
+                        </strong>
+
+                        ${escapeHtml(vehicle.ownerName)}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Licence:
+                        </strong>
+
+                        ✅
+                        ${escapeHtml(vehicle.licenceStatus)}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Identity:
+                        </strong>
+
+                        ✅
+                        ${escapeHtml(vehicle.aadhaarStatus)}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Auto-Pay:
+                        </strong>
+
+                        ${escapeHtml(vehicle.autoDebitStatus)}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Vehicle Status:
+                        </strong>
+
+                        ${escapeHtml(vehicle.vehicleStatus)}
+                    </p>
+
 
                     ${
                         isStolen
+
                             ? `
                                 <button
                                     class="normal-button"
@@ -765,6 +1287,7 @@
                                     ✅ Remove Stolen Flag
                                 </button>
                             `
+
                             : `
                                 <button
                                     class="danger-button"
@@ -774,193 +1297,401 @@
                                 </button>
                             `
                     }
+
                 </div>
 
-                <h2>💰 Fine Management</h2>
 
-<div class="fine-card">
+                <!-- ==============================
+                     FINE MANAGEMENT
+                ============================== -->
 
-    <h3>👮 Add New Traffic Fine</h3>
+                <div class="fine-management">
 
-    <label>Violation Reason</label>
+                    <h2>
+                        💰 Fine Management
+                    </h2>
 
-    <select id="fineViolation">
-        <option value="">-- Select Violation --</option>
-        <option value="No Helmet">🚫 No Helmet</option>
-        <option value="Drink & Drive">🚗 Drink & Drive</option>
-        <option value="Unauthorized Modification">
-            🔧 Unauthorized Modification
-        </option>
-        <option value="Signal Violation">🚦 Signal Violation</option>
-        <option value="Licence Violation">🪪 Licence Violation</option>
-        <option value="Rules Violation">📋 Rules Violation</option>
-    </select>
 
-    <label>Fine Amount</label>
+                    <div class="selected-vehicle">
 
-    <input
-        id="fineAmount"
-        type="number"
-        min="1"
-        placeholder="Enter fine amount"
-    >
+                        🚗 Selected Vehicle:
+                        ${escapeHtml(vehicle.vehicleNumber)}
 
-    <button onclick="addFine()">
-        💰 Add Fine
-    </button>
+                    </div>
 
-    <div id="fineMessage"></div>
 
-</div>
+                    <h3>
+                        👮 Add New Traffic Fine
+                    </h3>
 
-<h3>📋 Existing Fine Records</h3>
 
-${fineHtml}
+                    <label for="fineViolation">
+                        Violation Reason
+                    </label>
+
+
+                    <select id="fineViolation">
+
+                        <option value="">
+                            -- Select Violation --
+                        </option>
+
+                        <option value="No Helmet">
+                            🚫 No Helmet
+                        </option>
+
+                        <option value="Drink & Drive">
+                            🚗 Drink & Drive
+                        </option>
+
+                        <option value="Unauthorized Modification">
+                            🔧 Unauthorized Modification
+                        </option>
+
+                        <option value="Signal Violation">
+                            🚦 Signal Violation
+                        </option>
+
+                        <option value="Licence Violation">
+                            🪪 Licence Violation
+                        </option>
+
+                        <option value="Rules Violation">
+                            📋 Rules Violation
+                        </option>
+
+                    </select>
+
+
+                    <label for="fineAmount">
+                        Fine Amount
+                    </label>
+
+
+                    <input
+                        id="fineAmount"
+                        type="number"
+                        min="1"
+                        placeholder="Enter fine amount"
+                    >
+
+
+                    <button onclick="addFine()">
+                        💰 Add Fine
+                    </button>
+
+
+                    <div id="fineMessage"></div>
+
+                </div>
+
+
+                <!-- EXISTING FINES -->
+
+                <h2>
+                    💰 Fine Records
+                </h2>
+
+                ${fineHtml}
+
             `;
         }
 
+
+        /* ==============================
+           ADD FINE
+        ============================== */
+
+        async function addFine() {
+
+            const violation =
+                document
+                    .getElementById("fineViolation")
+                    .value
+                    .trim();
+
+
+            const fineAmount =
+                Number(
+                    document
+                        .getElementById("fineAmount")
+                        .value
+                );
+
+
+            const message =
+                document.getElementById("fineMessage");
+
+
+            if (!violation) {
+
+                message.innerHTML = `
+                    <div class="fine-error">
+                        ❌ Please select a violation reason.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            if (!fineAmount || fineAmount <= 0) {
+
+                message.innerHTML = `
+                    <div class="fine-error">
+                        ❌ Please enter a valid fine amount.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            if (!selectedVehicleNumber) {
+
+                message.innerHTML = `
+                    <div class="fine-error">
+                        ❌ Please search a vehicle first.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            if (!loggedInOfficerId) {
+
+                message.innerHTML = `
+                    <div class="fine-error">
+                        ❌ Officer session expired. Please login again.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/officer/fine`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                vehicleNumber:
+                                    selectedVehicleNumber,
+
+                                officerId:
+                                    loggedInOfficerId,
+
+                                violation:
+                                    violation,
+
+                                fineAmount:
+                                    fineAmount
+
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    message.innerHTML = `
+                        <div class="fine-error">
+                            ❌
+                            ${escapeHtml(data.message)}
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                message.innerHTML = `
+                    <div class="fine-success">
+
+                        ✅
+                        <strong>
+                            Fine added successfully!
+                        </strong>
+
+                        <br><br>
+
+                        Violation:
+                        <strong>
+                            ${escapeHtml(violation)}
+                        </strong>
+
+                        <br>
+
+                        Amount:
+                        <strong>
+                            ₹${fineAmount}
+                        </strong>
+
+                        <br>
+
+                        Fine ID:
+                        <strong>
+                            ${escapeHtml(data.fine.id)}
+                        </strong>
+
+                    </div>
+                `;
+
+
+                document
+                    .getElementById("fineViolation")
+                    .value = "";
+
+
+                document
+                    .getElementById("fineAmount")
+                    .value = "";
+
+
+                await searchVehicle();
+
+                await loadStatistics();
+
+                await loadReports();
+
+                await loadAuditLogs();
+
+
+            } catch (error) {
+
+                message.innerHTML = `
+                    <div class="fine-error">
+
+                        ❌ Backend connection failed.
+
+                        <br>
+
+                        Make sure Render backend is running.
+
+                    </div>
+                `;
+            }
+        }
+
+
+        /* ==============================
+           MARK STOLEN
+        ============================== */
+
         async function markStolen() {
-            if (!confirm("Flag this vehicle as STOLEN?")) return;
+
+            if (
+                !confirm(
+                    "Flag this vehicle as STOLEN?"
+                )
+            ) {
+                return;
+            }
+
 
             await updateVehicleStatus("stolen");
         }
 
+
+        /* ==============================
+           MARK NORMAL
+        ============================== */
+
         async function markNormal() {
-            if (!confirm("Remove stolen flag and mark vehicle as NORMAL?")) return;
+
+            if (
+                !confirm(
+                    "Remove stolen flag and mark vehicle as NORMAL?"
+                )
+            ) {
+                return;
+            }
+
 
             await updateVehicleStatus("normal");
         }
 
-        async function updateVehicleStatus(action) {
-            try {
-                const response = await fetch(
-                    `${API_URL}/api/officer/vehicle/${encodeURIComponent(selectedVehicleNumber)}/${action}`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            officerId: loggedInOfficerId
-                        })
-                    }
-                );
 
-                const data = await response.json();
+        /* ==============================
+           UPDATE VEHICLE STATUS
+        ============================== */
+
+        async function updateVehicleStatus(action) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/officer/vehicle/${encodeURIComponent(selectedVehicleNumber)}/${action}`,
+                        {
+                            method: "PUT",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                officerId:
+                                    loggedInOfficerId
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
 
                 if (!response.ok) {
-                    alert("❌ " + data.message);
+
+                    alert(
+                        "❌ " +
+                        data.message
+                    );
+
                     return;
                 }
 
-                alert("✅ " + data.message);
+
+                alert(
+                    "✅ " +
+                    data.message
+                );
+
 
                 await searchVehicle();
+
                 await loadStatistics();
+
                 await loadReports();
+
                 await loadAuditLogs();
+
+
             } catch (error) {
-                alert("❌ Backend connection failed.");
+
+                alert(
+                    "❌ Backend connection failed."
+                );
             }
         }
-        async function addFine() {
 
-    const violation =
-        document.getElementById("fineViolation").value;
-
-    const fineAmount =
-        Number(document.getElementById("fineAmount").value);
-
-    const message =
-        document.getElementById("fineMessage");
-
-    if (!violation) {
-        message.innerHTML = `
-            <div class="error">
-                ❌ Please select a violation reason.
-            </div>
-        `;
-        return;
-    }
-
-    if (!fineAmount || fineAmount <= 0) {
-        message.innerHTML = `
-            <div class="error">
-                ❌ Please enter a valid fine amount.
-            </div>
-        `;
-        return;
-    }
-
-    if (!selectedVehicleNumber) {
-        message.innerHTML = `
-            <div class="error">
-                ❌ Please search a vehicle first.
-            </div>
-        `;
-        return;
-    }
-
-    try {
-
-        const response = await fetch(
-            `${API_URL}/api/officer/fine`,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    vehicleNumber: selectedVehicleNumber,
-                    officerId: loggedInOfficerId,
-                    violation: violation,
-                    fineAmount: fineAmount
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-
-            message.innerHTML = `
-                <div class="error">
-                    ❌ ${escapeHtml(data.message)}
-                </div>
-            `;
-
-            return;
-        }
-
-        message.innerHTML = `
-            <div class="normal-card">
-                ✅ Fine added successfully!
-                <br>
-                <strong>${escapeHtml(violation)}</strong>
-                — ₹${fineAmount}
-            </div>
-        `;
-
-        document.getElementById("fineViolation").value = "";
-        document.getElementById("fineAmount").value = "";
-
-        await searchVehicle();
-        await loadStatistics();
-        await loadReports();
-        await loadAuditLogs();
-
-    } catch (error) {
-
-        message.innerHTML = `
-            <div class="error">
-                ❌ Backend connection failed.
-            </div>
-        `;
-    }
-}
     </script>
 
 </body>
+
 </html>
