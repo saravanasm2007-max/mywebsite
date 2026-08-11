@@ -776,8 +776,46 @@
                     }
                 </div>
 
-                <h2>💰 Fine Records</h2>
-                ${fineHtml}
+                <h2>💰 Fine Management</h2>
+
+<div class="fine-card">
+
+    <h3>👮 Add New Traffic Fine</h3>
+
+    <label>Violation Reason</label>
+
+    <select id="fineViolation">
+        <option value="">-- Select Violation --</option>
+        <option value="No Helmet">🚫 No Helmet</option>
+        <option value="Drink & Drive">🚗 Drink & Drive</option>
+        <option value="Unauthorized Modification">
+            🔧 Unauthorized Modification
+        </option>
+        <option value="Signal Violation">🚦 Signal Violation</option>
+        <option value="Licence Violation">🪪 Licence Violation</option>
+        <option value="Rules Violation">📋 Rules Violation</option>
+    </select>
+
+    <label>Fine Amount</label>
+
+    <input
+        id="fineAmount"
+        type="number"
+        min="1"
+        placeholder="Enter fine amount"
+    >
+
+    <button onclick="addFine()">
+        💰 Add Fine
+    </button>
+
+    <div id="fineMessage"></div>
+
+</div>
+
+<h3>📋 Existing Fine Records</h3>
+
+${fineHtml}
             `;
         }
 
@@ -825,6 +863,103 @@
                 alert("❌ Backend connection failed.");
             }
         }
+        async function addFine() {
+
+    const violation =
+        document.getElementById("fineViolation").value;
+
+    const fineAmount =
+        Number(document.getElementById("fineAmount").value);
+
+    const message =
+        document.getElementById("fineMessage");
+
+    if (!violation) {
+        message.innerHTML = `
+            <div class="error">
+                ❌ Please select a violation reason.
+            </div>
+        `;
+        return;
+    }
+
+    if (!fineAmount || fineAmount <= 0) {
+        message.innerHTML = `
+            <div class="error">
+                ❌ Please enter a valid fine amount.
+            </div>
+        `;
+        return;
+    }
+
+    if (!selectedVehicleNumber) {
+        message.innerHTML = `
+            <div class="error">
+                ❌ Please search a vehicle first.
+            </div>
+        `;
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/officer/fine`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    vehicleNumber: selectedVehicleNumber,
+                    officerId: loggedInOfficerId,
+                    violation: violation,
+                    fineAmount: fineAmount
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            message.innerHTML = `
+                <div class="error">
+                    ❌ ${escapeHtml(data.message)}
+                </div>
+            `;
+
+            return;
+        }
+
+        message.innerHTML = `
+            <div class="normal-card">
+                ✅ Fine added successfully!
+                <br>
+                <strong>${escapeHtml(violation)}</strong>
+                — ₹${fineAmount}
+            </div>
+        `;
+
+        document.getElementById("fineViolation").value = "";
+        document.getElementById("fineAmount").value = "";
+
+        await searchVehicle();
+        await loadStatistics();
+        await loadReports();
+        await loadAuditLogs();
+
+    } catch (error) {
+
+        message.innerHTML = `
+            <div class="error">
+                ❌ Backend connection failed.
+            </div>
+        `;
+    }
+}
     </script>
 
 </body>
