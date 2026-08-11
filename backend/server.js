@@ -223,6 +223,93 @@ app.get("/api/officer/vehicle/:vehicleNumber", function (req, res) {
    FINE RECORDS + PAYMENT HISTORY
 ===================================================== */
 
+/* =====================================================
+   OFFICER ADD NEW FINE
+===================================================== */
+
+app.post("/api/officer/fine", function (req, res) {
+    const vehicleNumber = formatVehicleNumber(req.body.vehicleNumber);
+    const violation = String(req.body.violation || "").trim();
+    const fineAmount = Number(req.body.fineAmount);
+    const officerId = String(req.body.officerId || "").trim();
+
+    if (!vehicleNumber || !violation || !fineAmount) {
+        return res.status(400).json({
+            success: false,
+            message: "Vehicle number, violation and fine amount are required."
+        });
+    }
+
+    if (fineAmount <= 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Fine amount must be greater than ₹0."
+        });
+    }
+
+    const vehicle = findVehicle(vehicleNumber);
+
+    if (!vehicle) {
+        return res.status(404).json({
+            success: false,
+            message: "Vehicle not found."
+        });
+    }
+
+    const newFineId =
+        fines.length > 0
+            ? Math.max(...fines.map(function (fine) {
+                return Number(fine.id);
+            })) + 1
+            : 1;
+
+    const registeredDate =
+        new Date().toISOString().split("T")[0];
+
+    const dueDate = new Date();
+
+    dueDate.setDate(dueDate.getDate() + 30);
+
+    const newFine = {
+        id: newFineId,
+        vehicleNumber: vehicleNumber,
+        fineAmount: fineAmount,
+        registeredDate: registeredDate,
+        dueDate: dueDate.toISOString().split("T")[0],
+        status: "Pending",
+        paymentStatus: "Not Paid",
+        violation: violation,
+        paymentMethod: null,
+        paidDate: null,
+        receiptNumber: null
+    };
+
+    fines.push(newFine);
+
+    addAuditLog(
+        officerId,
+        "Fine Added",
+        vehicleNumber,
+        "Fine of ₹" + fineAmount +
+        " added for: " + violation
+    );
+
+    addNotification(
+        vehicleNumber,
+        "danger",
+        "New Traffic Fine Added",
+        "Fine #" + newFineId +
+        " of ₹" + fineAmount +
+        " was added for " + violation + "."
+    );
+
+    res.json({
+        success: true,
+        message: "Traffic fine added successfully.",
+        fine: newFine
+    });
+});
+
 app.get("/api/fines", function (req, res) {
     res.json(fines);
 });
@@ -389,6 +476,92 @@ app.put("/api/fines/:id/auto-debit", function (req, res) {
         success: true,
         message: "Fine paid successfully using Demo Auto-Pay.",
         fine: fine
+    });
+});
+
+/* =====================================================
+   OFFICER ADD FINE
+===================================================== */
+
+app.post("/api/officer/fine", function (req, res) {
+
+    const vehicleNumber = formatVehicleNumber(req.body.vehicleNumber);
+    const officerId = String(req.body.officerId || "").trim();
+    const violation = String(req.body.violation || "").trim();
+    const fineAmount = Number(req.body.fineAmount || 0);
+
+    if (!vehicleNumber || !officerId || !violation || !fineAmount) {
+        return res.status(400).json({
+            success: false,
+            message: "Vehicle, officer, violation and fine amount are required."
+        });
+    }
+
+    const vehicle = findVehicle(vehicleNumber);
+
+    if (!vehicle) {
+        return res.status(404).json({
+            success: false,
+            message: "Vehicle not found."
+        });
+    }
+
+    const newFine = {
+        id: fines.length
+            ? Math.max(...fines.map(function (fine) {
+                return Number(fine.id);
+            })) + 1
+            : 1,
+
+        vehicleNumber: vehicleNumber,
+
+        fineAmount: fineAmount,
+
+        registeredDate: new Date()
+            .toISOString()
+            .split("T")[0],
+
+        dueDate: new Date(
+            Date.now() + 30 * 24 * 60 * 60 * 1000
+        )
+            .toISOString()
+            .split("T")[0],
+
+        status: "Pending",
+
+        paymentStatus: "Not Paid",
+
+        violation: violation,
+
+        paymentMethod: null,
+
+        paidDate: null,
+
+        receiptNumber: null
+    };
+
+    fines.push(newFine);
+
+    addAuditLog(
+        officerId,
+        "Fine Added",
+        vehicleNumber,
+        "Fine added for " + violation +
+        " - ₹" + fineAmount
+    );
+
+    addNotification(
+        vehicleNumber,
+        "danger",
+        "New Traffic Fine Added",
+        "A fine of ₹" + fineAmount +
+        " was added for: " + violation + "."
+    );
+
+    res.json({
+        success: true,
+        message: "Fine added successfully.",
+        fine: newFine
     });
 });
 
