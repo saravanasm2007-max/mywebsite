@@ -21,6 +21,21 @@ let vehicles = [
         authorizationMonths: 3,
         vehicleStatus: "Normal",
         stolen: false
+    },
+
+    // NEW DEMO STOLEN VEHICLE
+    {
+        vehicleNumber: "TN 38 XY 5678",
+        ownerName: "Ra******* jan****",
+        licenceStatus: "Verified",
+        aadhaarStatus: "Verified",
+        aadhaarMasked: "XXXX-XXXX-5678",
+        bankName: "Demo Bank",
+        bankAccountMasked: "XXXX5678",
+        autoDebitStatus: "Active",
+        authorizationMonths: 3,
+        vehicleStatus: "STOLEN",
+        stolen: true
     }
 ];
 
